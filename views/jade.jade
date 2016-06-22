@@ -1,0 +1,55 @@
+include head
+.container
+  .jumbotron
+    h1(style="font-size:36px;") #{content}
+
+    - var str = 'i came from variable';
+    h2 #{str}
+
+    - var tag = '<p>wrapped by p tag</p>';
+    | !{tag}
+    p #{tag}
+
+    p= "<p>标签字符转换</p>"
+    p!= "<p>标签字符没有转换</p>"
+
+    h3.cls i have class
+
+    p.
+      Lorem ipsum dolor sit amet, consectetur 
+      adipisicing elit. Excepturi assumenda error 
+      quaerat vitae recusandae ipsam eos voluptate 
+      tempore dolorem. Iure quam aspernatur, natus 
+      recusandae deleniti eius saepe fugiat, quisquam id.
+
+    a(href="#") i have attribute
+
+    ul.nav
+      - for(var i = 0; i < 5; i++){
+          li #{i}
+      - }
+      li my brothers came from loop
+      each val, index in ['a','b','c','d','e']
+        li= index + ": " + val
+
+    - var isVip = false;
+    unless isVip
+      p #{isVip}您不是会员
+
+    - var vipLvl = 3
+    case vipLvl
+      when 1: p 一级会员您好
+      when 2: p 二级会员你好
+      when 3: p 三级会员您好
+      default: p 您不是会员
+
+    mixin box(param)
+      div.box i'll repeat several times, #{param}
+      block
+    +box("param1")
+    +box("param2")
+      span 我将从外部传入mixin中
+    +box("param3")
+
+  script(type="text/javascript").
+    console.log('来自jade中的script标签');

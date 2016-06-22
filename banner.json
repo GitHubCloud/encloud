@@ -1,0 +1,22 @@
+{
+  "1": {
+    "title": "banner1",
+    "url": "#",
+    "imgUrl": "/img/banner/banner1.jpg"
+  },
+  "2": {
+    "title": "banner2",
+    "url": "#",
+    "imgUrl": "/img/banner/banner2.jpg"
+  },
+  "3": {
+    "title": "banner3",
+    "url": "#",
+    "imgUrl": "/img/banner/banner3.jpg"
+  },
+  "4": {
+    "title": "banner4",
+    "url": "#",
+    "imgUrl": "/img/banner/banner4.jpg"
+  }
+}

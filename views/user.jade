@@ -1,0 +1,163 @@
+include head
+.container
+	.jumbotron
+		form.form-horizontal(method="POST", action="#")
+			mixin field(txt, tip)
+				.form-group.has-feedback
+					label.control-label.col-xs-4.col-sm-2.text-right(for!=attributes.for)= txt
+					.col-xs-8
+						block
+						.help-block.with-errors
+			+field('用户名')(for="user_name")
+				p.form-control-static= user.user_name
+				span.glyphicon.form-control-feedback
+			+field('性　别')
+				label(style="margin-top:8px;")
+					input(
+						type="radio",
+						name="user_gender",
+						value="1",
+						checked=user.user_gender
+					)
+					| &nbsp;&nbsp;&nbsp;男
+				| &nbsp;&nbsp;&nbsp;&nbsp;
+				label(style="margin-top:8px;")
+					input(
+						type="radio",
+						name="user_gender",
+						value="0",
+						checked=!user.user_gender
+					)
+					| &nbsp;&nbsp;&nbsp;女
+			+field('居住地')(for="user_address")
+				input.form-control#user_address(
+					type="text",
+					name="user_address",
+					autocomplete="off",
+					maxlength=100,
+					placeholder="请输入您的居住地",
+					value="#{user.user_address?user.user_address:''}"
+				)
+			+field('生　日')(for="user_birth")
+				.input-group.date
+					if user.user_birth
+						- var birth = user.user_birth.getFullYear() + "-" + (user.user_birth.getMonth() + 1) + "-" + user.user_birth.getDate();
+					else
+						- var birth = '';
+					input.form-control#user_birth(
+						type="text",
+						name="user_birth",
+						required,
+						placeholder="请选择您的出生日期",
+						pattern="^(\\d){4}-(\\d){1,2}-(\\d){1,2}$"
+						data-error="请选择您的出生日期，或手动输入（yyyy-mm-dd）",
+						value="#{birth}"
+					)
+					span.input-group-addon
+						i.glyphicon.glyphicon-th
+			+field('SNS')(for="user_sns")
+				input.form-control#user_sns(
+					type="text",
+					name="user_qq",
+					autocomplete="off",
+					maxlength=20,
+					placeholder="请输入您的常用社交帐号",
+					value="#{user.user_sns?user.user_sns:''}"
+				)
+			+field('个性签名')(for="user_biography")
+				textarea.form-control#user_biography(
+					style="max-width:2000px;max-height:300px",
+					name="user_biography",
+					placeholder="随便写点什么吧",
+					maxlength="160",
+					rows="5",
+				) #{user.user_biography?user.user_biography:''}
+			.form-group
+				.col-sm-8.col-xs-12.col-sm-offset-2
+					button.btn.btn-info.btn-block(onclick="saveprofile('#{user._id}')", type="button") 修改资料
+			.form-group
+				.col-sm-8.col-xs-12.col-sm-offset-2
+					a.btn.btn-warning.btn-block(href="/user/changepwd") 修改密码
+			.form-group
+				.col-sm-8.col-xs-12.col-sm-offset-2
+					button.btn.btn-danger.btn-block(onclick="logout()", type="button") 注销登录
+style.
+	.datepicker{
+		background-color:#fff;
+	}
+	.jumbotron p{
+		margin-bottom:auto;
+		font-size:inherit;
+		font-weight:inherit;
+	}
+script(type="text/javascript").
+	$(".input-group.date").datepicker({
+		format: "yyyy-mm-dd",
+		startView: 2,
+		language: "zh-CN",
+		orientation: "bottom left",
+		keyboardNavigation: false,
+		forceParse: false,
+		autoclose: true,
+		todayHighlight: true
+	});
+
+	Messenger.options = {
+		extraClasses: 'messenger-fixed messenger-on-bottom',
+		theme: 'flat',
+		messageDefaults: {
+			message: '默认信息',
+			type: 'info',
+			showCloseButton: true,
+			hideAfter: 8
+		}
+	}
+
+	function saveprofile(id) {
+		Messenger().run({
+			action: $.ajax,
+			successMessage: "资料修改成功！",
+			errorMessage: "未知错误，资料修改失败！",
+			progressMessage: "修改中，请稍候……"
+		}, {
+			url: "/saveprofile",
+			data: {
+				id: id,
+				user_gender: $(":radio:checked").val(),
+				user_address: $("#user_address").val(),
+				user_birth: $('#user_birth').val(),
+				user_sns: $('#user_sns').val(),
+				user_biography: $('#user_biography').val(),
+			},
+			method: "POST",
+			success: function (d) {
+				if(!d.status){
+					return {
+						type: 'error',
+						message: '未知错误，资料修改失败！'
+					}
+				}
+			},
+			error: function (d) {
+				console.log('change profile err');
+			}
+		});
+	}
+
+	function logout() {
+		Messenger().run({
+			action: $.ajax,
+			successMessage: "注销成功！",
+			errorMessage: "未知错误，注销失败！",
+			progressMessage: "注销中，请稍候……"
+		}, {
+			url: "/logout",
+			method: "post",
+			success: function (d) {
+				location.reload();
+			},
+			error: function (d) {
+				console.log('logout err');
+			}
+		});
+	}

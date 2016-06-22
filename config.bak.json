@@ -1,0 +1,62 @@
+{
+	"nav": {
+		"index": {
+			"title": "首页",
+			"url": "/",
+			"position": "index"
+		},
+		"chatroom": {
+			"title": "聊天室",
+			"url": "/chatroom",
+			"position": "chatroom"
+		},
+		"user": {
+			"title": "用户",
+			"url": "/user",
+			"position": "user"
+		},
+		"list": {
+			"title": "列表",
+			"url": "/list",
+			"position": "list"
+		},
+		"register": {
+			"title": "注册",
+			"url": "/register",
+			"position": "register"
+		},
+		"login": {
+			"title": "登录",
+			"url": "/login",
+			"position": "login"
+		},
+		"jade": {
+			"title": "jade",
+			"url": "/jade",
+			"position": "jade"
+		},
+		"parent": {
+			"title": "parent",
+			"url": "javascript:void(0);",
+			"children": {
+				"example": {
+					"title": "example",
+					"url": "/example"
+				},
+				"divider": true,
+				"child2": {
+					"title": "child2",
+					"url": "javascript:void();"
+				}
+			}
+		}
+	},
+	"seo": {
+		"title": "默认标题",
+		"kwd": "关键字,blabla,whatever",
+		"des": "描述blablabla"
+	},
+	"page": {
+		"count": 10
+	}
+}

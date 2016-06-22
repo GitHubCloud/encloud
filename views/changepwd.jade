@@ -1,0 +1,100 @@
+include head
+.container
+	.jumbotron
+		form.form-horizontal(method="POST", action="#", data-toggle="validator")
+			mixin field(txt)
+				.form-group.has-feedback
+					label.control-label.col-xs-4.col-sm-2.text-right(for!=attributes.for)= txt
+					.col-xs-8
+						block
+						span.glyphicon.form-control-feedback
+						.help-block.with-errors
+			+field('*当前密码')(for="ori_pwd")
+				input.form-control#ori_pwd(
+					type="password",
+					name="ori_pwd",
+					autocomplete="off",
+					maxlength="20",
+					placeholder="请填写您的当前密码",
+					required,
+					pattern="^\\S{8,20}$",
+					data-error="密码格式不正确，请填写8-20位非空字符",
+					data-remote="/checkPwd",
+					data-remote-error="当前密码不正确"
+				)
+			+field('*新密码')(for="user_pwd")
+				input.form-control#user_pwd(
+					type="password",
+					name="user_pwd",
+					autocomplete="off",
+					maxlength="20",
+					placeholder="8-20位非空字符",
+					required,
+					pattern="^\\S{8,20}$",
+					data-error="密码格式不正确，请填写8-20位非空字符"
+				)
+			+field('*确认密码')(for="repwd")
+				input.form-control#repwd(
+					type="password",
+					name="repwd",
+					autocomplete="off",
+					maxlength="20",
+					placeholder="请确认您输入的密码",
+					required,
+					data-match="#user_pwd",
+					data-error="确认密码不能为空",
+					data-match-error="两次密码不匹配"
+				)
+			.form-group
+				.col-sm-8.col-xs-12.col-sm-offset-2
+					button.btn.btn-success.btn-block(type="submit") 修改密码
+
+script(type="text/javascript").
+	Messenger.options = {
+		extraClasses: 'messenger-fixed messenger-on-bottom',
+		theme: 'flat',
+		messageDefaults: {
+			message: '默认信息',
+			type: 'info',
+			showCloseButton: true,
+			hideAfter: 8
+		}
+	}
+
+	$("form").validator().on('submit', function (e) {
+		if(e.isDefaultPrevented()){
+			// 
+		}else{
+			$("#registerBtn").addClass('disabled');
+			$("#registerBtn").html("<i class='loadingSVG'></i>");
+
+			Messenger().run({
+				action: $.ajax,
+				successMessage: '密码修改成功，请等待跳转……',
+				errorMessage: '未知错误，密码修改失败！',
+				progressMessage: '修改中，请稍后……'
+			}, {
+				url: '/user/changepwd',
+				method: 'post',
+				data: {
+					ori_pwd: $('#ori_pwd').val(),
+					user_pwd: $('#user_pwd').val(),
+					repwd: $('#repwd').val()
+				},
+				success: function (d) {
+					if(!d.status){
+						return {
+							type: 'error',
+							message: '信息填写不正确，请检查'
+						}
+					}else{
+						location.href = "/user";
+					}
+				},
+				error: function (d) {
+					console.log(d);
+				}
+			});
+		}
+		return false;
+	});

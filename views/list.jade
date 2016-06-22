@@ -1,0 +1,103 @@
+include head
+.container
+  .jumbotron
+    .table-responsive
+      table.table.table-condensed.table-hover.table-bordered.table-striped
+        thead
+          tr
+            th 用户名
+            th 密码
+            th 性别
+            th 生日
+            th 登录状态
+            th 注销&nbsp;/&nbsp;删除
+        tbody
+          each val in usrs
+            tr
+              td= val.user_name
+              td= val.user_pwd
+              - var gender = val.user_gender == null ? "未知" : val.user_gender==true ? "男" : "女";
+              td= gender
+              if val.user_birth
+                - var birth = val.user_birth.getFullYear() + "年" + (val.user_birth.getMonth() + 1) + "月" + val.user_birth.getDate() + "日";
+              else
+                - var birth = '未知';
+              td= birth
+              td #{uid == val._id ? "√" : "×"}
+              td
+                a(onclick="logout()", href="#") 注销
+                | &nbsp;/&nbsp;
+                a(onclick="delAccount('#{val._id}')", href="#") 删除
+    if totalPage > 1
+      nav
+        ul.pagination
+          if page == 1
+            li.disabled: a(href="javascript:void(0);") &laquo;
+          else
+            li: a(href="/list/#{parseInt(page) - 1}") &laquo;
+          - for (var i=1; i<=totalPage; i++) {
+              - var cls = (i == page) ? 'active' : '';
+              li(class!='#{cls}'): a(href="/list/#{i}") #{i}
+          - }
+          if page == totalPage
+            li.disabled: a(href="javascript:void(0);") &raquo;
+          else
+            li: a(href="/list/#{parseInt(page) + 1}") &raquo;
+
+script(type="text/javascript").
+  Messenger.options = {
+    extraClasses: 'messenger-fixed messenger-on-bottom',
+    theme: 'flat',
+    messageDefaults: {
+      message: '默认信息',
+      type: 'info',
+      showCloseButton: true,
+      hideAfter: 8
+    }
+  }
+
+  function logout() {
+    Messenger().run({
+      action: $.ajax,
+      successMessage: "注销成功！",
+      errorMessage: "未知错误，注销失败！",
+      progressMessage: "注销中，请稍候"
+    }, {
+      url: "/logout",
+      method: "post",
+      success: function (d) {
+        location.reload();
+      },
+      error: function (d) {
+        console.log('logout err');
+      }
+    });
+  }
+
+  function delAccount(id) {
+    Messenger().run({
+      action: $.ajax,
+      successMessage: "已成功删除该帐号！",
+      errorMessage: "未知错误，未能删除该帐号！",
+      progressMessage: "处理中，请稍候……"
+    }, {
+      url: "/delAccount",
+      data: {
+        id: id
+      },
+      method: 'post',
+      success: function (d) {
+        if(d.status){
+          location.reload();
+        }else{
+          return {
+            type: "error",
+            message: "未知错误，未能删除该帐号！"
+          };
+        }
+      },
+      error: function (d) {
+        // body...
+      }
+    });
+  }

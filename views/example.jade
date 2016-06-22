@@ -1,0 +1,198 @@
+include head
+.container
+  .jumbotron.text-center
+    h1(style="font-size:36px;") 基本组件展示
+    h2 按钮
+    button.btn.btn-default Default
+    | &nbsp;&nbsp;
+    button.btn.btn-primary Primary
+    | &nbsp;&nbsp;
+    button.btn.btn-success Success
+    | &nbsp;&nbsp;
+    button.btn.btn-info Info
+    | &nbsp;&nbsp;
+    button.btn.btn-warning Warning
+    | &nbsp;&nbsp;
+    button.btn.btn-danger Danger
+    br
+    h2= "单 & 多选框"
+    input#cb1(type="checkbox")
+    label(for="cb1") &nbsp;&nbsp;checkbox1&nbsp;&nbsp;
+    input#cb2(type="checkbox", checked)
+    label(for="cb2") &nbsp;&nbsp;checkbox2&nbsp;&nbsp;
+    input#iradio1(type="radio", name="icheck")
+    label(for="iradio1") &nbsp;&nbsp;radio1&nbsp;&nbsp;
+    input#iradio2(type="radio", name="icheck", checked)
+    label(for="iradio2") &nbsp;&nbsp;radio2&nbsp;&nbsp;
+    br
+    h2 文本框
+    form.form-inline
+      input.form-control(type="text", placeholder="文字")
+    h2 超链接
+    a(href="http://localhost:3000/", style="font-size:18px;") 首页
+    h2 弹出信息
+    button.btn.btn-info(onclick="msg1();") 弹出1
+    | &nbsp;&nbsp;
+    button.btn.btn-danger(onclick="msg2();") 弹出2
+    | &nbsp;&nbsp;
+    button.btn.btn-success(onclick="msg3();") 弹出3
+    | &nbsp;&nbsp;
+    button.btn.btn-warning(onclick="msg4();") 弹出4
+    | &nbsp;&nbsp;
+    button.btn.btn-primary(onclick="msg5();") 弹出5
+    | &nbsp;&nbsp;
+    button.btn.btn-default(onclick="msg6();") 弹出6
+    | &nbsp;&nbsp;
+    button.btn.btn-info(onclick="msg7();") 弹出7
+    | &nbsp;&nbsp;
+    button.btn.btn-default(onclick="msg8();") 弹出8
+    br
+    button.btn.btn-info(onclick="updatemsg1();") 修改
+    | &nbsp;&nbsp;
+    button.btn.btn-danger(onclick="updatemsg2();") 关闭所有
+    h2 分页
+    nav
+      ul.pagination
+        li.disabled: a(href="#") &laquo;
+        li.active: a(href="#") 1
+        li: a(href="#") 2
+        li: a(href="#") 3
+        li: a(href="#") &raquo;
+script(type="text/javascript").
+  Messenger.options = {
+    extraClasses: 'messenger-fixed messenger-on-bottom',
+    theme: 'flat',
+    messageDefaults: {
+      message: '默认信息',
+      type: 'info',
+      showCloseButton: true,
+      hideAfter: 5
+    }
+  }
+  Messenger().post();
+  var msg;
+  function msg1() {
+    msg = Messenger().post({
+      message: "Info",
+      type: "info",
+      closeButtonText: "关闭",
+      id: "single",
+      singleton: true,
+    });
+    //- Messenger().info({
+    //-   message: 'test info'
+    //- });
+  }
+  function msg2() {
+    Messenger().post({
+      message: "Error",
+      type: "error",
+      id: "single"
+    });
+    //- Messenger().error({
+    //-   message: 'test error',
+    //- });
+  }
+  function msg3() {
+    //- Messenger().post({
+    //-   message: "Success",
+    //-   type: "success",
+    //-   showCloseButton: true,
+    //- });
+    Messenger().success({
+      message: 'test success',
+      showCloseButton: true
+    });
+  }
+  function msg4() {
+    msg = Messenger().post({
+      message: "↓↓↓↓↓↓↓↓↓",
+      actions: {
+        confirm: {
+          label: 'confirm',
+          action: function () {
+            msg.update({
+              message: '确认了',
+              type: 'success',
+              actions: false
+            });
+          }
+        }
+      }
+    });
+  }
+  function msg5() {
+    msg = Messenger().run({
+      action: $.ajax,
+      successMessage: "成功",
+      errorMessage: "失败",
+      progressMessage: "请等待"
+    }, {
+      url: "/ajax",
+      data: {
+        param: 'test'
+      },
+      method: 'post',
+      success: function (res) {
+        console.log(res);
+        console.log(msg);
+        msg.update({
+          successMessage: res
+        });
+      },
+      error: function (res) {
+        console.log(res);
+      }
+    });
+  }
+  function msg6() {
+    Messenger().run({
+      action: function (opts) {
+        this.successMessage = opts.test;
+        opts.success();
+      },
+      successMessage: "成功",
+      errorMessage: "失败",
+      progressMessage: "请等待"
+    }, {
+      test: 'test'
+    });
+  }
+  function msg7() {
+    msg = Messenger().expectPromise(function (i) {
+      console.log(msg);
+      var xhr =  $.ajax({
+        url: '/ajax',
+        type: 'post'
+      });
+      console.log(xhr);
+      return xhr;
+    }, {
+      successMessage: "Success",
+      progressMessage: "Loading..",
+      errorMessage: "Error"
+    });
+  }
+  function msg8() {
+    msg = Messenger().post({
+      message: "Click me",
+      events: {
+        "click": function (e) {
+          msg.update({
+            message: "You did it!",
+            type: "success",
+            events: false
+          });
+        }
+      }
+    });
+  }
+  function updatemsg1() {
+    msg.update({
+      message: "sudden err",
+      type: "error"
+    });
+  }
+  function updatemsg2() {
+    Messenger().hideAll();
+  }

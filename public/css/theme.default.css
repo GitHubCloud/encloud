@@ -1,0 +1,72 @@
+body {
+  color: #080808;
+  background-image: url(/img/footer_lodyas.png);
+}
+
+
+/*导航*/
+
+.navbar-inverse .navbar-brand,
+.navbar-inverse .navbar-nav>li>a {
+  transition: all 0.5s;
+}
+
+.navbar-inverse .navbar-brand:hover,
+.navbar-inverse .navbar-nav>li>a:hover,
+.navbar-inverse .navbar-nav>.active>a:hover {
+  color: #080808;
+  background-color: #f5f5f5;
+}
+
+
+/*下拉菜单*/
+
+.dropdown-menu {
+  background-color: #222;
+  border: 1px solid #ccc;
+  border: 1px solid rgba(0, 0, 0, .15);
+}
+
+.navbar-inverse .navbar-nav .open .dropdown-menu>li>a,
+.dropdown-menu>li>a {
+  color: #9d9d9d;
+  transition: all 0.5s;
+}
+
+.navbar-inverse .navbar-nav .open .dropdown-menu>li>a:hover,
+.dropdown-menu>li>a:hover {
+  color: #262626;
+  background-color: #f5f5f5;
+}
+
+.dropdown-menu .divider {
+  background-color: #080808;
+}
+
+
+/*超链接*/
+
+a {
+  color: #0da4d3;
+  transition: all .2s;
+  text-decoration: none;
+}
+
+a:hover {
+  color: #080808;
+  text-decoration: none;
+}
+
+.container a[target="_blank"],
+.container a[href^="http://"] {
+  letter-spacing: 0;
+  padding-right: 10px;
+  background: url(/img/blank.gif) no-repeat top right;
+}
+
+
+/*表单*/
+
+label {
+  cursor: pointer;
+}

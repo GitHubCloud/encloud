@@ -1,0 +1,84 @@
+include head
+.container
+	.jumbotron.container
+		form.form-horizontal(method="POST", action="#", data-toggle="validator")
+			mixin field(txt, tip)
+				.form-group.has-feedback
+					label.control-label.col-xs-4.col-sm-2.text-right(for!=attributes.for)= txt
+					.col-xs-8
+						block
+						.help-block.with-errors
+			+field('*用户名')(for="user_name")
+				input.form-control#user_name(
+					type="text",
+					name="user_name",
+					autocomplete="off",
+					maxlength=16,
+					placeholder="2-16位字母、数字或下划线，第一位必须是字母",
+					required,
+					pattern="^[a-zA-Z]{1}[a-zA-Z0-9_]{1,15}$",
+					data-error="用户名格式不正确，请填写2-16位字母、数字或下划线，第一位必须是字母",
+					data-remote="/checkNameRepeat",
+					data-remote-error="用户名已被使用"
+				)
+				span.glyphicon.form-control-feedback
+			+field('*密　码')(for="user_pwd")
+				input.form-control#user_pwd(
+					type="password",
+					name="user_pwd",
+					autocomplete="off",
+					maxlength=20,
+					placeholder="8-20位非空字符",
+					required,
+					pattern="^\\S{8,20}$",
+					data-error="密码格式不正确，请填写8-20位非空字符"
+				)
+				span.glyphicon.form-control-feedback
+			+field('*确认密码')(for="repwd")
+				input.form-control#repwd(
+					type="password",
+					name="repwd",
+					autocomplete="off",
+					maxlength=20,
+					placeholder="请确认您输入的密码",
+					required,
+					data-match="#user_pwd",
+					data-error="确认密码不能为空"
+					data-match-error="两次密码不匹配"
+				)
+				span.glyphicon.form-control-feedback
+			+field('性　别')
+				label(style="margin-top:8px;")
+					input(type="radio", name="user_gender", value="1")
+					span &nbsp;&nbsp;&nbsp;男
+				span &nbsp;&nbsp;&nbsp;&nbsp;
+				label(style="margin-top:8px;")
+					input(type="radio", name="user_gender", value="0")
+					span &nbsp;&nbsp;&nbsp;女
+			.form-group
+				.col-sm-8.col-xs-12.col-sm-offset-2
+					button.btn.btn-primary.btn-lg.btn-block#registerBtn(type="submit") 注&nbsp;&nbsp;册
+style.
+	.datepicker{
+		background-color:#fff;
+	}
+script(type="text/javascript").
+	$(".input-group.date").datepicker({
+		format: "yyyy-mm-dd",
+		startView: 2,
+		language: "zh-CN",
+		orientation: "bottom left",
+		keyboardNavigation: false,
+		forceParse: false,
+		autoclose: true,
+		todayHighlight: true
+	});
+
+	$("form").validator().on('submit', function (e) {
+		if(e.isDefaultPrevented()){
+			// 
+		}else{
+			$("#registerBtn").addClass('disabled');
+			$("#registerBtn").html("<i class='loadingSVG'></i>");
+		}
+	});

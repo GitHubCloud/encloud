@@ -1,0 +1,55 @@
+include head
+if banner
+  .swiper-container
+    .swiper-wrapper
+      each val in banner
+        .swiper-slide(style="text-align:left;background:#fff;margin:0 auto;")
+          a(href="#{val.url}")
+            .slide-box(style="height:360px;background:url(#{val.imgUrl}) no-repeat center top;")
+    .swiper-pagination
+div.container
+  .jumbotron
+    h1.text-center Whatever.
+  br
+  br
+  br
+  br
+  br
+  br
+  br
+  br
+  br
+  br
+  br
+  br
+  br
+  br
+  br
+  br
+  br
+  br
+  br
+  br
+  br
+  br
+  br
+  br
+  br
+  br
+  br
+  br
+  br
+  br
+  br
+  br
+  br
+  br
+  br
+script(type="text/javascript").
+  var swiper = new Swiper('.swiper-container', {
+    pagination: '.swiper-pagination',
+    slidesPerView: 1,
+    paginationClickable: true,
+    loop: true,
+    autoplay: 4000,
+  });

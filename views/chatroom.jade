@@ -1,0 +1,92 @@
+include head
+.panel.panel-default#online_user
+	.panel-heading
+		h3.panel-title 在线用户
+	ul.list-group
+		a(href="#")
+			li.list-group-item
+				img.img-circle(src="/img/default-avatar.png")
+				span Cloud
+				i.gender.male
+.collapse_btn.closed
+.panel.panel-default#chat_room
+	.panel-body
+	.panel-footer
+		form(action="#")
+			.input-group
+				.input-group-btn
+					input.form-control#chat_input(type="text", autocomplete="off")
+					button.btn.btn-default(type="submit"): i.glyphicon.glyphicon-ok
+					button.btn.btn-default(type="reset"): i.glyphicon.glyphicon-remove
+					button.btn.btn-default(type="button"): i.glyphicon.glyphicon-font
+script(type="text/javascript").
+	var chat = io('/chatroom');
+
+	//- 获取用户身份
+	var uid = "#{user.id}";
+	if(uid != 0){
+		var from = {
+			uname: "#{user.user_name}",
+			ugender: 1,
+			uavatar: ""
+		}
+	}else{
+		var from = {
+			uname: "游客" + Math.round(Math.random() * 100).toString() + Math.round(Math.random() * 100).toString() + Math.round(Math.random() * 100).toString() + Math.round(Math.random() * 100).toString()
+		}
+	}
+
+	//- 全站公告
+	socket.emit('messenger', 'info', from.uname + '进入了聊天室');
+
+	//- 进入聊天室
+	chat.emit('sysmsg', '欢迎 ' + from.uname + ' 进入聊天室');
+	chat.emit('join', from);
+	
+	//- 离开聊天室
+	$(window).bind('beforeunload', function () {
+		chat.emit('leave', from);
+	});
+	
+	//- 发送信息
+	$("form").submit(function (e) {
+		var msg = $("#chat_input").val();
+		if(!msg){
+			Messenger().post({
+				type: 'error',
+				message: '不能发送空信息！'
+			});
+		}else{
+			var to = false;
+			if(!to){
+				$("#chat_input").val('');
+				pushMsg('SELF', from, msg);
+				chat.emit('sendmsg', from, msg);
+			}
+		}
+	});
+
+	//- 系统信息
+	chat.on('sysmsg', function (msg) {
+		pushSysMsg(msg);
+	});
+
+	/**
+	 *	pushmsg 获取消息
+	 *		type String 消息类型
+	 *			SELF: 自己发送的消息
+	 *			OTHER: 他人发送的消息
+	 *			PRIVATE: 私人消息（要指定to）
+	 */
+	chat.on('pushmsg', function (type, f, msg, to) {
+		if(f.uname != from.uname){
+			pushMsg(type, f, msg, to);
+		}
+	});
+style.
+	body{
+		overflow:hidden;
+	}
+	.mCSB_inside>.mCSB_container {
+		margin-right:20px;
+	}

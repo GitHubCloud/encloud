@@ -1,0 +1,115 @@
+doctype html
+html
+	head
+		meta(charset="UTF-8")
+		meta(name="viewport", content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0")
+		meta(http-equiv="X-UA-Compatible", content="IE=edge,chrome=1")
+		if kwd
+			meta(name="keywords", content="#{kwd}")
+		else
+			meta(name="keywords", content="#{config.seo.kwd}")
+		if des
+			meta(name="description", content="#{des}")
+		else
+			meta(name="description", content="#{config.seo.des}")
+		if title
+			title #{title}
+		else
+			title #{config.seo.title}
+		link(href="/css/normalize.css", rel="stylesheet")
+		link(href="/bootstrap/dist/css/bootstrap.min.css", rel="stylesheet")
+		link(href="/css/common.css", rel="stylesheet")
+		link(href="/css/theme.default.css", rel="stylesheet")
+		script(src="/jquery/dist/jquery.min.js")
+		script(src="/bootstrap/dist/js/bootstrap.min.js")
+		script(src="/headroom.js/dist/headroom.min.js")
+		script(src="/headroom.js/dist/jQuery.headroom.min.js")
+		!= "<!--[if lt IE 9]>"
+			script(src="//cdn.bootcss.com/html5shiv/3.7.2/html5shiv.min.js")
+			script(src="//cdn.bootcss.com/respond.js/1.4.2/respond.min.js")
+		!= "<![endif]-->"
+		link(href="/iCheck/skins/square/blue.css", rel="stylesheet")
+		script(src="/iCheck/icheck.min.js")
+		link(href="/messenger/build/css/messenger.css", rel="stylesheet")
+		link(href="/messenger/build/css/messenger-theme-flat.css", rel="stylesheet")
+		script(src="/messenger/build/js/messenger.min.js")
+		script(src="/messenger/build/js/messenger-theme-flat.js")
+		script(src="/socket.io/socket.io.js")
+		if css
+			- for(var i=0; i<css.length; i++)
+				link(href="#{css[i]}", rel="stylesheet")
+		if js
+			- for(var i=0; i<js.length; i++)
+				script(src="#{js[i]}")
+		script(type="text/javascript").
+			$(function(){
+				$("#headroom").headroom({
+					"offset": 50,
+					"tolerance": 0,
+					"classes": {
+						"initial": "animated",
+						"pinned": "slideDown",
+						"unpinned": "slideUp"
+					}
+				});
+
+				$("input").iCheck({
+					checkboxClass: 'icheckbox_square-blue',
+					radioClass: 'iradio_square-blue',
+					increaseArea: '0%'
+				});
+			});
+
+			Messenger.options = {
+				extraClasses: 'messenger-fixed messenger-on-bottom',
+				theme: 'flat',
+				messageDefaults: {
+					message: '默认信息',
+					type: 'info',
+					showCloseButton: true,
+					hideAfter: 5
+				}
+			}
+
+			var socket = io();
+			socket.on('messenger', function (type, msg) {
+				Messenger().post({
+					type: type,
+					message: msg
+				});
+			});
+	body
+		nav.navbar.navbar-inverse.navbar-fixed-top#headroom
+			div.container
+				div.navbar-header
+					button.navbar-toggle.collapsed(
+						type="button", 
+						data-toggle="collapse",
+						data-target="#main_navbar"
+					)
+						span.icon-bar
+						span.icon-bar
+						span.icon-bar
+					a.navbar-brand(href="/")
+						i.glyphicon.glyphicon-home
+						span(style="font: 20px 'Consolas', sans-serif;") &nbsp;Cloud
+				div#main_navbar.navbar-collapse.collapse
+					ul.nav.navbar-nav
+						each val in config.nav
+							if val.position == position && position
+								- var active = "active";
+							else
+								- var active = "";
+							li(style="font: 18px '微软雅黑', 'Consolas', sans-serif;", class="#{active}")
+								if val.children
+									a.dropdown-toggle(data-toggle="dropdown", href="#{val.url}") #{val.title}
+										span.caret
+									ul.dropdown-menu
+										each val2, key in val.children
+											if val2 === true
+												li.divider
+											else
+												li
+													a(href="#{val2.url}") #{val2.title}
+								else
+									a(href="#{val.url}") #{val.title}
