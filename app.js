@@ -31,7 +31,7 @@ app.use(express.static(__dirname));
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(express.static(path.join(__dirname, 'bower_components')));
 
-var port = process.env.PORT || 3000;
+var port = process.env.PORT || 80;
 var server = app.listen(port);
 io = io.listen(server);
 console.log('Server running at port %s', port);
