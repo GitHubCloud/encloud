@@ -27,7 +27,7 @@ script(type="text/javascript").
 	if(uid != 0){
 		var from = {
 			uname: "#{user.user_name}",
-			ugender: 1,
+			ugender: "#{user.user_gender}",
 			uavatar: ""
 		}
 	}else{
@@ -36,12 +36,18 @@ script(type="text/javascript").
 		}
 	}
 
+	//- 更新在线用户
+	chat.on('updateusers', function (users) {
+		updateOnlineUser(users);
+	});
+
 	//- 全站公告
-	socket.emit('messenger', 'info', from.uname + '进入了聊天室');
+	//- socket.emit('messenger', 'info', from.uname + '进入了聊天室');
 
 	//- 进入聊天室
 	chat.emit('sysmsg', '欢迎 ' + from.uname + ' 进入聊天室');
 	chat.emit('join', from);
+	chat.emit('updateusers');
 	
 	//- 离开聊天室
 	$(window).bind('beforeunload', function () {

@@ -80,3 +80,24 @@ function pushMsg(type, from, msg, to) {
 		$("#mCSB_2_container").css("top", $("#mCSB_2_container").height() - $("#mCSB_2").height());
 	}
 }
+
+function updateOnlineUser(users) {
+	var html = "";
+	for(var i in users){
+		console.log(users[i].uname, users[i].ugender, typeof users[i].ugender);
+		html += '<a href="#"><li class="list-group-item">';
+		if(users[i].uavatar != '' && users[i].uavatar != undefined && users[i].uavatar != null){
+			var avatar = users[i].uavatar;
+		}else{
+			var avatar = "/img/default-avatar.png";
+		}
+		html += '<img class="img-circle" src="'+avatar+'" />';
+		html += '<span>'+users[i].uname+'</span>';
+		if(users[i].ugender != undefined || users[i].ugender != null){
+			var gender = (users[i].ugender=='true') ? 'male' : 'female';
+			html += '<i class="gender '+gender+'"></i>';
+		}
+		html += '</li></a>';
+	}
+	$("#online_user .list-group").html(html);
+}

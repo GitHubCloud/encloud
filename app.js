@@ -49,6 +49,7 @@ io.on('connection', function (socket) {
 
 // 自定义命名空间
 var chat = io.of('/chatroom');
+var users = {};// 在线用户
 chat.on('connection', function (socket) {
 	// 在聊天室发送系统信息
 	socket.on('sysmsg', function (msg) {
@@ -62,15 +63,24 @@ chat.on('connection', function (socket) {
 
 	// 进入聊天室
 	socket.on('join', function (from) {
-		// body...
+		users[from.uname] = {
+			uname: from.uname,
+			ugender: from.ugender,
+			uavatar: from.uavatar
+		}
+		socket.broadcast.emit('updateusers', users);
 	});
 
 	// 离开聊天室*************
 	socket.on('leave', function (from) {
 		socket.broadcast.emit('sysmsg', from.uname + " 离开了聊天室");
+		delete users[from.uname];
+		socket.broadcast.emit('updateusers', users);
 	});
-	socket.on('disconnect', function () {
-		socket.emit('messenger', 'info', 'test');
+
+	// 更新在线用户
+	socket.on('updateusers', function () {
+		socket.emit('updateusers', users);
 	});
 });
 
