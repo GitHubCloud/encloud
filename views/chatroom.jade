@@ -17,7 +17,7 @@ include head
 				.input-group-btn
 					input.form-control#chat_input(type="text", autocomplete="off")
 					button.btn.btn-default(type="submit"): i.glyphicon.glyphicon-ok
-					button.btn.btn-default(type="reset"): i.glyphicon.glyphicon-remove
+					button.btn.btn-default#clear_btn(type="button"): i.glyphicon.glyphicon-remove
 					button.btn.btn-default(type="button"): i.glyphicon.glyphicon-font
 script(type="text/javascript").
 	var chat = io('/chatroom');
@@ -28,7 +28,7 @@ script(type="text/javascript").
 		var from = {
 			uname: "#{user.user_name}",
 			ugender: "#{user.user_gender}",
-			uavatar: ""
+			uavatar: "#{user.user_avatar}"
 		}
 	}else{
 		var from = {
@@ -45,7 +45,6 @@ script(type="text/javascript").
 	//- socket.emit('messenger', 'info', from.uname + '进入了聊天室');
 
 	//- 进入聊天室
-	chat.emit('sysmsg', '欢迎 ' + from.uname + ' 进入聊天室');
 	chat.emit('join', from);
 	chat.emit('updateusers');
 	

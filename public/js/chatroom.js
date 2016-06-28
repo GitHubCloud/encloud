@@ -47,10 +47,14 @@ $(function () {
 		autoHideScrollbar: true,
 		theme: 'dark-2'
 	});
+
+	$("#clear_btn").click(function (e) {
+		$("#mCSB_2_container").html('');
+	});
 });
 
 function pushSysMsg(msg) {
-	$(".panel-body #mCSB_2_container").append($("<div>").addClass("sysmsg").text(msg));
+	$(".panel-body #mCSB_2_container").append($("<div>").addClass("sysmsg").html(msg));
 	if($("#mCSB_2_container").height() > $("#mCSB_2").height()){
 		$("#mCSB_2_container").css("top", $("#mCSB_2_container").height() - $("#mCSB_2").height());
 	}
@@ -84,7 +88,6 @@ function pushMsg(type, from, msg, to) {
 function updateOnlineUser(users) {
 	var html = "";
 	for(var i in users){
-		console.log(users[i].uname, users[i].ugender, typeof users[i].ugender);
 		html += '<a href="#"><li class="list-group-item">';
 		if(users[i].uavatar != '' && users[i].uavatar != undefined && users[i].uavatar != null){
 			var avatar = users[i].uavatar;

@@ -55,12 +55,32 @@ include head
 				label(style="margin-top:8px;")
 					input(type="radio", name="user_gender", value="0")
 					span &nbsp;&nbsp;&nbsp;女
+			+field('验证码')
+				input.form-control#captcha(
+					type="text",
+					name="captcha",
+					autocomplete="off",
+					maxlength=10,
+					placeholder="请输入右侧的验证码",
+					required,
+					data-error="验证码不能为空",
+					data-remote="/captcha",
+					data-remote-error="验证码输入错误"
+				)
+				img#captchapng(src='/captcha.png?t=#{new Date().getTime()}')
 			.form-group
 				.col-sm-8.col-xs-12.col-sm-offset-2
 					button.btn.btn-primary.btn-lg.btn-block#registerBtn(type="submit") 注&nbsp;&nbsp;册
 style.
 	.datepicker{
 		background-color:#fff;
+	}
+	#captcha{
+		width:calc(100% - 100px);
+		display:inline-block;
+	}
+	#captchapng{
+		margin-top:-4px;
 	}
 script(type="text/javascript").
 	$(".input-group.date").datepicker({
@@ -81,4 +101,8 @@ script(type="text/javascript").
 			$("#registerBtn").addClass('disabled');
 			$("#registerBtn").html("<i class='loadingSVG'></i>");
 		}
+	});
+
+	$("#captchapng").click(function (e) {
+		$(this).attr('src', '/captcha.png?t=' + new Date().getTime());
 	});

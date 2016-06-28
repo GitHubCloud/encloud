@@ -4,6 +4,7 @@ var mongoose = require('mongoose');
 var bodyParser = require('body-parser');
 var session = require('express-session');
 var cookieParser = require('cookie-parser');
+var captchapng = require('captchapng');
 var path = require('path');
 var crypto = require('crypto');
 
@@ -63,6 +64,7 @@ chat.on('connection', function (socket) {
 
 	// 进入聊天室
 	socket.on('join', function (from) {
+		socket.broadcast.emit('sysmsg', '欢迎 <i>' + from.uname + '</i> 进入聊天室');
 		users[from.uname] = {
 			uname: from.uname,
 			ugender: from.ugender,
@@ -71,9 +73,9 @@ chat.on('connection', function (socket) {
 		socket.broadcast.emit('updateusers', users);
 	});
 
-	// 离开聊天室*************
+	// 离开聊天室
 	socket.on('leave', function (from) {
-		socket.broadcast.emit('sysmsg', from.uname + " 离开了聊天室");
+		socket.broadcast.emit('sysmsg', "<i>" + from.uname + "</i> 离开了聊天室");
 		delete users[from.uname];
 		socket.broadcast.emit('updateusers', users);
 	});
@@ -216,6 +218,39 @@ app.get('/list(/:page)?', function (req, res) {
 		});
 });
 
+// 验证码
+app.get('/captcha.png', function (req, res) {
+	var cap = parseInt(Math.random() * 9000 + 1000);
+	var p = new captchapng(100, 34, cap);
+	p.color(parseInt(Math.random()*255), parseInt(Math.random()*255), parseInt(Math.random()*255), parseInt(Math.random()*255));
+	p.color(parseInt(Math.random()*255), parseInt(Math.random()*255), parseInt(Math.random()*255), parseInt(Math.random()*255));
+
+	req.session.captcha = {
+		captcha: cap,
+		expire: (new Date()).getTime() + 1000 * 60 * 10
+	}
+
+	var img = p.getBase64();
+	var imgbase64 = new Buffer(img, 'base64');
+	res.setHeader('Content-Type', 'image/png');
+	res.send(imgbase64);
+});
+
+// 判断验证码
+app.get('/captcha', function (req, res) {
+	if(req.session.captcha && req.query.captcha){
+		var cap = req.session.captcha.captcha;
+		var expire = new Date(req.session.captcha.expire);
+		if(Date.now() < expire && req.query.captcha == cap){
+			res.send('ok');
+		}else{
+			res.status(406).send('wrong');
+		}
+	}else{
+		res.status(406).send('wrong');
+	}
+});
+
 // 注册
 app.get('/register', function (req, res) {
 	res.render('register',{
@@ -230,7 +265,8 @@ app.post('/register', function (req, res) {
 	var user_name = req.body.user_name;
 	var user_pwd = req.body.user_pwd;
 	var user_gender = req.body.user_gender;
-	if(user_name && user_pwd){
+	var captcha = req.body.captcha;
+	if(user_name && user_pwd && captcha && captcha == req.session.captcha.captcha){
 		user_pwd = md5encrypt(user_pwd);
 
 		var user = require('./model/user');
