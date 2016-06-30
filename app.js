@@ -285,8 +285,7 @@ app.get('/register', function (req, res) {
 		title: '注册',
 		position: 'register',
 		config: config,
-		css: ['bootstrap-datepicker/dist/css/bootstrap-datepicker.min.css'],
-		js: ['bootstrap-datepicker/dist/js/bootstrap-datepicker.min.js','/bootstrap-datepicker/dist/locales/bootstrap-datepicker.zh-CN.min.js','/bootstrap-validator/dist/validator.min.js']
+		js: ['bootstrap-validator/dist/validator.min.js']
 	});
 });
 app.post('/register', function (req, res) {
