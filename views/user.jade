@@ -8,6 +8,20 @@ include head
 					.col-xs-8
 						block
 						.help-block.with-errors
+			+field('头　像')(for="user_avatar")
+				if user.user_avatar
+					- var avatar = user.user_avatar;
+				else
+					- var avatar = '/img/default-avatar.png';
+				img.img-circle#avatar(src="#{avatar}", alt="#{user.user_name}")
+				p.form-control-static(style="line-height:36px;")
+					| 文件大小不超过500kb，格式必须为
+					span.label.label-success .jpg
+					span.label.label-primary .png
+					span.label.label-danger .bmp
+					span.label.label-info .gif
+				button.btn.btn-primary#upload_btn(type="button") 上传头像
+				input.form-control.btn.btn-primary#user_avatar(type="file")
 			+field('用户名')(for="user_name")
 				p.form-control-static= user.user_name
 				span.glyphicon.form-control-feedback
@@ -82,15 +96,77 @@ include head
 				.col-sm-8.col-xs-12.col-sm-offset-2
 					button.btn.btn-danger.btn-block(onclick="logout()", type="button") 注销登录
 style.
-	.datepicker{
-		background-color:#fff;
-	}
-	.jumbotron p{
-		margin-bottom:auto;
-		font-size:inherit;
-		font-weight:inherit;
-	}
+	.datepicker{background-color:#fff;}
+	.jumbotron p{margin-bottom:auto;font-size:inherit;font-weight:inherit;}
+	span.label{margin-left:5px;;}
+	#avatar{width:100px;height:100px;float:left;margin-right:20px;}
+	#user_avatar{display:none;}
+	#upload_btn{width:calc(100% - 120px);min-width:120px;height:36px;margin-top:4px;}
+
 script(type="text/javascript").
+	$("#upload_btn").click(function (e) {
+		if($(this).hasClass('disabled')){ return false; }
+		$("#user_avatar").trigger("click");
+	});
+
+	var oFReader = new FileReader();
+	$("#user_avatar").change(function (e) {
+		if(this.files.length === 0){ return false; }
+		var oFile = this.files[0];
+		if(oFile.size > 512000){
+			Messenger().post({
+				type: 'error',
+				message: '上传失败，文件大小超过限制！'
+			});
+			return false;
+		}
+		//- rFilter = /^(?:image\/bmp|image\/cis\-cod|image\/gif|image\/ief|image\/jpeg|image\/jpeg|image\/jpeg|image\/pipeg|image\/png|image\/svg\+xml|image\/tiff|image\/x\-cmu\-raster|image\/x\-cmx|image\/x\-icon|image\/x\-portable\-anymap|image\/x\-portable\-bitmap|image\/x\-portable\-graymap|image\/x\-portable\-pixmap|image\/x\-rgb|image\/x\-xbitmap|image\/x\-xpixmap|image\/x\-xwindowdump)$/i;
+		rFilter = /^(?:image\/bmp|image\/gif|image\/jpeg|image\/pjpeg|image\/png|image\/x\-png)$/i;
+		if(!rFilter.test(oFile.type)){
+			Messenger().post({
+				type: 'error',
+				message: '请上传正确的图像文件！'
+			});
+			return false;
+		}
+		oFReader.readAsDataURL(oFile);
+	});
+
+	oFReader.onload = function (oFREvent) {
+		$("#upload_btn").addClass('disabled');
+		$("#upload_btn").html('<i class="loadingSVG"></i>');
+		$("#avatar").attr('src', oFREvent.target.result);
+		$.ajax({
+			type: "POST",
+			url: "/uploadAvatar",
+			data: {
+				id: '#{user._id}',
+				uname: '#{user.user_name}',
+				avatar: oFREvent.target.result
+			},
+			success: function (d) {
+				$("#upload_btn").removeClass('disabled');
+				$("#upload_btn").html("上传头像");
+				if(d.status == 1){
+					Messenger().post({
+						type: 'success',
+						message: '头像上传成功！'
+					});
+				}
+			},
+			error: function (d) {
+				$("#upload_btn").removeClass('disabled');
+				$("#upload_btn").html("上传头像");
+				if(d.status == 413){
+					Messenger().post({
+						type: 'error',
+						message: '上传失败，文件大小超过限制！'
+					});
+				}
+			}
+		});
+	};
+
 	$(".input-group.date").datepicker({
 		format: "yyyy-mm-dd",
 		startView: 2,

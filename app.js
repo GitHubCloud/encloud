@@ -18,8 +18,8 @@ app.set('view engine', 'jade');
 app.set('views', __dirname + "/views");
 
 // 中间件
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({extended: false}));
+app.use(bodyParser.json({limit: '1mb'}));
+app.use(bodyParser.urlencoded({extended: false, limit: '1mb'}));
 app.use(cookieParser());
 app.use(session({
 	resave: false,
@@ -113,6 +113,34 @@ app.get('/chatroom', function (req, res) {
 			js: ['js/chatroom.js','/malihu-custom-scrollbar-plugin/jquery.mCustomScrollbar.concat.min.js'],
 			css: ['css/chatroom.css','/malihu-custom-scrollbar-plugin/jquery.mCustomScrollbar.min.css'],
 			user: usr?usr:{id:0}
+		});
+	});
+});
+
+// 上传头像
+app.post('/uploadAvatar', function (req, res) {
+	var gm = require('gm');
+	var uid = req.body.id;
+	var uname = req.body.uname;
+	var avatar = req.body.avatar;
+	var ext = avatar.substr(avatar.indexOf('/') + 1, avatar.indexOf(';') - avatar.indexOf('/') - 1);// 文件后缀
+	var aBase64 = avatar.replace(/^data:image\/\w+;base64,/, "");// 去掉格式信息后的base64编码头像
+	var aBuffer = new Buffer(aBase64, 'base64');
+	var filename = uname + '-' + uid + '-' + Date.now() + "." + ext;
+	gm(aBuffer)
+	.resize(100, 100, '!')
+	.noProfile()
+	.write("public/upload/avatar/" + filename, function (err) {
+		if(err){ console.log(err.stack); }
+		var user = require('./model/user');
+		var update = {$set:{'user_avatar': 'upload/avatar/' + filename}};
+		user.update({'_id':uid}, update, function (err, d) {
+			if(err) console.error(err.stack);
+			if(d.ok == 1){
+				res.send({status:1});
+			}else{
+				res.send({status:0});
+			}
 		});
 	});
 });

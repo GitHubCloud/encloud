@@ -74,8 +74,9 @@ function pushMsg(type, from, msg, to) {
 	msg = msg.replace(/>/g, '&gt;');
 	msg = msg.replace(/ /g, '&nbsp;');
 
+	var avatar = from.uavatar?from.uavatar:'/img/default-avatar.png';
 	var html = '<div class="' + (type=='SELF' ? 'my' : '') + 'message">';
-	html += '<img src="/img/default-avatar.png" class="avatar">';
+	html += '<img src="' + avatar + '" class="avatar">';
 	html += '<div class="content"><a href="#"><div class="uname">' + from.uname + '</div></a>';
 	html += '<div class="bubble">'+msg+'</div></div><div class="clearfix"></div></div>';
 

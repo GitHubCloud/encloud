@@ -15,7 +15,7 @@ include head
 		form(action="#")
 			.input-group
 				.input-group-btn
-					input.form-control#chat_input(type="text", autocomplete="off")
+					input.form-control#chat_input(type="text", autocomplete="off", maxlength="300")
 					button.btn.btn-default(type="submit"): i.glyphicon.glyphicon-ok
 					button.btn.btn-default#clear_btn(type="button"): i.glyphicon.glyphicon-remove
 					button.btn.btn-default(type="button"): i.glyphicon.glyphicon-font
@@ -47,6 +47,10 @@ script(type="text/javascript").
 	//- 进入聊天室
 	chat.emit('join', from);
 	chat.emit('updateusers');
+	Messenger().post({
+		type: 'success',
+		message: '欢迎进入聊天室！'
+	});
 	
 	//- 离开聊天室
 	$(window).bind('beforeunload', function () {
@@ -60,6 +64,11 @@ script(type="text/javascript").
 			Messenger().post({
 				type: 'error',
 				message: '不能发送空信息！'
+			});
+		}else if(msg.length > 300){
+			Messenger().post({
+				type: 'error',
+				message: '消息长度不能超过300个字符！'
 			});
 		}else{
 			var to = false;

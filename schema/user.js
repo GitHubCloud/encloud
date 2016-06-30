@@ -16,7 +16,8 @@ var userInfo_Schema = new mongoose.Schema({
     default: null
   },
   user_sns: String,
-  user_biography: String
+  user_biography: String,
+  user_avatar: String
 });
 
 userInfo_Schema.statics = {
