@@ -13,4 +13,4 @@
 *.txt
 *.cmd
 *.bat
-/public/upload/
+/public/upload/*
