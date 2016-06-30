@@ -110,8 +110,8 @@ app.get('/chatroom', function (req, res) {
 			title: 'chatroom',
 			config: config,
 			position: 'chatroom',
-			js: ['js/chatroom.js','/malihu-custom-scrollbar-plugin/jquery.mCustomScrollbar.concat.min.js'],
-			css: ['css/chatroom.css','/malihu-custom-scrollbar-plugin/jquery.mCustomScrollbar.min.css'],
+			js: ['js/chatroom.js','malihu-custom-scrollbar-plugin/jquery.mCustomScrollbar.concat.min.js'],
+			css: ['css/chatroom.css','malihu-custom-scrollbar-plugin/jquery.mCustomScrollbar.min.css'],
 			user: usr?usr:{id:0}
 		});
 	});
@@ -159,7 +159,7 @@ app.get('/user', function (req, res) {
 					config: config,
 					position: 'user',
 					css: ['bootstrap-datepicker/dist/css/bootstrap-datepicker.min.css'],
-					js: ['bootstrap-datepicker/dist/js/bootstrap-datepicker.min.js','/bootstrap-datepicker/dist/locales/bootstrap-datepicker.zh-CN.min.js'],
+					js: ['bootstrap-datepicker/dist/js/bootstrap-datepicker.min.js','bootstrap-datepicker/dist/locales/bootstrap-datepicker.zh-CN.min.js'],
 					user: usr
 				});
 			}else{
