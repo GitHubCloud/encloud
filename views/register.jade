@@ -72,9 +72,6 @@ include head
 				.col-sm-8.col-xs-12.col-sm-offset-2
 					button.btn.btn-primary.btn-lg.btn-block#registerBtn(type="submit") 注&nbsp;&nbsp;册
 style.
-	.datepicker{
-		background-color:#fff;
-	}
 	#captcha{
 		width:calc(100% - 100px);
 		display:inline-block;
@@ -85,17 +82,6 @@ style.
 		border-radius:0 4px 4px 0;
 	}
 script(type="text/javascript").
-	$(".input-group.date").datepicker({
-		format: "yyyy-mm-dd",
-		startView: 2,
-		language: "zh-CN",
-		orientation: "bottom left",
-		keyboardNavigation: false,
-		forceParse: false,
-		autoclose: true,
-		todayHighlight: true
-	});
-
 	$("form").validator().on('submit', function (e) {
 		if(e.isDefaultPrevented()){
 			// 
