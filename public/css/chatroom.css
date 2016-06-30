@@ -22,6 +22,8 @@
 #chat_room .panel-body .mymessage .content .bubble{background:#feedee;color:#333;padding:8px 12px;border-radius:8px;position:relative;}
 #chat_room .panel-body .mymessage .content .bubble:after{content:'';display:block;position:absolute;right:-8px;top:5px;border-right:8px solid transparent;border-bottom:6px solid #feedee;}
 
+#chat_room .panel-footer .input-group-btn button:last-child{border-radius:0 4px 4px 0;}
+
 #online_user{width:280px;display:none;}
 #online_user .mCSB_inside>.mCSB_container{margin:0;}
 #online_user .panel-heading{color:#fff;background-color:#242428;border-color:#2d2d2d;}
