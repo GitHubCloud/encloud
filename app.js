@@ -93,7 +93,7 @@ app.get('/', function (req, res) {
 		config: config,
 		position: 'index',
 		js: ['swiper/dist/js/swiper.jquery.min.js'],
-		css: ['wiper/dist/css/swiper.min.css'],
+		css: ['swiper/dist/css/swiper.min.css'],
 		kwd: '关键字',
 		des: '描述',
 		banner: require('./banner')
