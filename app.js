@@ -111,7 +111,7 @@ app.get('/chatroom', function (req, res) {
 			config: config,
 			position: 'chatroom',
 			js: ['js/chatroom.js','/malihu-custom-scrollbar-plugin/jquery.mCustomScrollbar.concat.min.js'],
-			css: ['ss/chatroom.css','/malihu-custom-scrollbar-plugin/jquery.mCustomScrollbar.min.css'],
+			css: ['css/chatroom.css','/malihu-custom-scrollbar-plugin/jquery.mCustomScrollbar.min.css'],
 			user: usr?usr:{id:0}
 		});
 	});
