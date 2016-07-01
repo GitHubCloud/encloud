@@ -1,10 +1,42 @@
-## Encloud
+##Encloud
 
 My frist Nodejs site.
 
 Nothing special.
 
-[See it online](http://encloud.com.cn/)
+See it online: [http://encloud.com.cn/](http://encloud.com.cn/)
+
+###Update
+
+####1.1.0
+- 注册
+- 登录
+- 用户信息
+- 头像上传
+- 在线用户显示
+- 单一公共聊天室
+- 等基本功能
+
+###npm Dependencies
+- express
+- express-session
+- body-parser
+- cookie-parser
+- jade
+- mongoose
+- socket.io
+- captchapng
+- gm(GraphicsMagick)
+
+###bower Dependencies
+- bootstrap
+- bootstrap-datepicker
+- bootstrap-validator
+- headroom.js
+- messenger
+- Swiper
+- iCheck
+- malihu-custom-scrollbar-plugin
 
 ###Todo
 

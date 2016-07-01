@@ -22,5 +22,13 @@
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "Encloud",
-  "license": "ISC"
+  "license": "ISC",
+  "homepage": "http://encloud.com.cn/",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/GitHubCloud/encloud.git"
+  },
+  "bugs": {
+    "url": "https://github.com/GitHubCloud/encloud/issues"
+  }
 }
