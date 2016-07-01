@@ -59,6 +59,7 @@ chat.on('connection', function (socket) {
 
 	// 用户发送信息
 	socket.on('sendmsg', function (from, msg) {
+		writeInHistory(msg, from);
 		socket.broadcast.emit('pushmsg', 'OTHER', from, msg);
 	});
 
@@ -86,6 +87,18 @@ chat.on('connection', function (socket) {
 		socket.emit('updateusers', users);
 	});
 });
+var count = 0;
+// 把信息写进历史记录
+function writeInHistory(msg, from) {
+	var msg_model = require('./model/msg');
+	var msg_entity = msg_model({
+		msg_content: msg,
+		msg_from: from['uname']
+	});
+	msg_entity.save(function (err) {
+		if(err){ console.error(err.stack); }
+	});
+}
 
 // 首页
 app.get('/', function (req, res) {
