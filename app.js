@@ -155,7 +155,6 @@ app.get('/user', function (req, res) {
 			if(err) console.error("ErroR: " + err.stack);
 			if(usr){
 				res.render('user', {
-					title: "user",
 					config: config,
 					position: 'user',
 					css: ['bootstrap-datepicker/dist/css/bootstrap-datepicker.min.css'],

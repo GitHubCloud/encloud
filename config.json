@@ -27,9 +27,9 @@
 		}
 	},
 	"seo": {
-		"title": "默认标题",
-		"kwd": "关键字,blabla,whatever",
-		"des": "描述blablabla"
+		"title": "Cloud",
+		"kwd": "nodejs,聊天室,chat,Cloud,encloud",
+		"des": "encloud.com.cn是一个基于nodejs的网站，主要功能是一个聊天室"
 	},
 	"page": {
 		"count": 10
