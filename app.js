@@ -65,6 +65,7 @@ chat.on('connection', function (socket) {
 	// 进入聊天室
 	socket.on('join', function (from) {
 		socket.broadcast.emit('sysmsg', '欢迎 <i>' + from.uname + '</i> 进入聊天室');
+		socket.emit('sysmsg', '欢迎 <i>' + from.uname + '</i> 进入聊天室');
 		users[from.uname] = {
 			uname: from.uname,
 			ugender: from.ugender,
