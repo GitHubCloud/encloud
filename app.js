@@ -102,8 +102,6 @@ function writeInHistory(msg, from) {
 
 // Admin
 app.get('/Cloud', function (req, res) {
-	// res.send(req.session.Admin);
-	console.log(req.session);
 	if(req.session.uid && req.session.Admin){
 		var user = require('./model/user');
 		user.find({_id: req.session.uid, Admin: req.session.Admin}, function (err) {
