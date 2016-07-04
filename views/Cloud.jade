@@ -1,0 +1,15 @@
+include head
+.container
+	.jumbotron.text-center
+		h2 Messenger Sender
+		select.form-control#MessengerType
+			option(value="info") Info
+			option(value="success") Success
+			option(value="error") Error
+		input.form-control#MessengerSender(type="text")
+		button.btn.btn-primary.btn-block#MessengerSenderBtn 发送Messenger消息
+
+script(type="text/javascript").
+	$("#MessengerSenderBtn").click(function (e) {
+		socket.emit('messenger', $("#MessengerType").val(), $("#MessengerSender").val());
+	});

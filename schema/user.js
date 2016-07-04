@@ -9,6 +9,7 @@ var userInfo_Schema = new mongoose.Schema({
     type: String,
     required: true
   },
+  Admin: Boolean,
   user_gender: Boolean,
   user_address: String,
   user_birth: {

@@ -87,7 +87,7 @@ chat.on('connection', function (socket) {
 		socket.emit('updateusers', users);
 	});
 });
-var count = 0;
+
 // 把信息写进历史记录
 function writeInHistory(msg, from) {
 	var msg_model = require('./model/msg');
@@ -99,6 +99,24 @@ function writeInHistory(msg, from) {
 		if(err){ console.error(err.stack); }
 	});
 }
+
+// Admin
+app.get('/Cloud', function (req, res) {
+	// res.send(req.session.Admin);
+	console.log(req.session);
+	if(req.session.uid && req.session.Admin){
+		var user = require('./model/user');
+		user.find({_id: req.session.uid, Admin: req.session.Admin}, function (err) {
+			if(err){ console.error(err.stack); }
+			res.render('Cloud', {
+				title: 'Cloud',
+				config: config
+			});
+		});
+	}else{
+		res.redirect('/login');
+	}
+});
 
 // 首页
 app.get('/', function (req, res) {
@@ -357,6 +375,7 @@ app.post('/login', function (req, res) {
 		user.findOne({'user_name': user_name, 'user_pwd': user_pwd}, function (err, d) {
 			if(err) console.error(err.stack);
 			if(d){
+				if(d.Admin){ req.session.Admin = d.Admin; }
 				if(remember == 'true'){
 					res.cookie('uid', d._id, {
 						maxAge: 60000 * 60 * 24 * 7,

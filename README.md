@@ -8,6 +8,10 @@ See it online: [http://encloud.com.cn/](http://encloud.com.cn/)
 
 ###Update
 
+####1.2.0
+- 增加提示音
+- 增加后台发送全站消息功能
+
 ####1.1.0
 - 注册
 - 登录
