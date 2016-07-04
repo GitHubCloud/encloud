@@ -83,15 +83,15 @@ chat.on('connection', function (socket) {
 	});
 
 	// test
-	socket.on('disconnect', function () {
-		console.log('disconnect' + count++);
-	});
-	socket.on('reconnect', function () {
-		console.log('reconnect');
-	});
-	socket.on('reconnecting', function () {
-		console.log('reconnecting');
-	});
+	// socket.on('disconnect', function () {
+	// 	console.log('disconnect' + count++);
+	// });
+	// socket.on('reconnect', function () {
+	// 	console.log('reconnect');
+	// });
+	// socket.on('reconnecting', function () {
+	// 	console.log('reconnecting');
+	// });
 
 	// 更新在线用户
 	socket.on('updateusers', function () {
