@@ -1,6 +1,6 @@
 ##Encloud
 
-My frist Nodejs site.
+My first Nodejs site.
 
 Nothing special.
 
