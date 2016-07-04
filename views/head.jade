@@ -95,12 +95,15 @@ html
 
 			var socket = io();
 			socket.on('messenger', function (type, msg) {
+				$("#messageAudio")[0].play();
 				Messenger().post({
 					type: type,
 					message: msg
 				});
 			});
 	body
+		audio#messageAudio
+			source(src="audio/message.ogg", type="audio/ogg")
 		nav.navbar.navbar-inverse.navbar-fixed-top#headroom
 			div.container
 				div.navbar-header
