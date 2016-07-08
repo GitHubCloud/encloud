@@ -1,0 +1,19 @@
+audio#messageAudio
+	source(src="/audio/message.ogg", type="audio/ogg")
+header
+	.collapse_sidebar
+		i.glyphicon.glyphicon-menu-hamburger
+	if admin
+		.admin_account
+			- var avatar = admin.uavatar?admin.uavatar:"img/default-avatar.png";
+			.admin_avatar: img(src="/#{avatar}", alt="#{admin.uname}")
+			a(href="#", data-toggle="adminDropdown").admin_name
+				| #{admin.uname}
+				i.glyphicon.glyphicon-menu-down
+			ul.dropdown-menu#adminDropdown
+				if config
+					each v in config.Dropdown
+						li: a(href="#{v.url}") #{v.title}
+	else
+		script.
+			window.history.go(-1);

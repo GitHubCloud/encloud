@@ -7,9 +7,52 @@ include head
 			option(value="success") Success
 			option(value="error") Error
 		input.form-control#MessengerSender(type="text")
-		button.btn.btn-primary.btn-block#MessengerSenderBtn 发送Messenger消息
+		button.btn.btn-primary.btn-block#MessengerSenderBtn 发送全站Messenger广播
+		br
+		h2 Online User
+		button.btn.btn-primary.btn-block#OnlineUserBtn 获取在线用户
+		table.table.table-responsive.table-striped.table-hover#OnlineUser
+			thead
+				tr
+					th(width="30"): input#checkAll(type="checkbox")
+					th 用户名
+					th(width="100"): a(href="#", onclick="silenceGroup()") 批量禁言
+					th(width="100"): a(href="#", onclick="kickGroup()") 批量踢出
+					th(width="100"): a(href="#", onclick="banGroup()") 批量封号
+					th(width="100"): a(href="#", onclick="banIPGroup()") 批量封IP
+			tbody
 
 script(type="text/javascript").
 	$("#MessengerSenderBtn").click(function (e) {
 		socket.emit('messenger', $("#MessengerType").val(), $("#MessengerSender").val());
 	});
+
+	$("#OnlineUserBtn").click(function (e) {
+		$("table#OnlineUser tbody").html("<tr><td width='100%' colspan='6' style='text-align:center;'><i class='loadingSVG-dark'></i></td><tr>")
+		socket.emit('getOnlineUser');
+	});
+	socket.on('getOnlineUser', function (users) {
+		var html = "";
+		for(var i in users){
+			html += '<tr data-uid="' + users[i].uid + '" data-uip="' + users[i].uip + '">';
+			html += '<td width="30"><input type="checkbox" /></td>';
+			html += '<td title="' + users[i].uid + '">' + users[i].uname + '</td>';
+			html += '<td width="100"><a href="#" onclick="silence(this)">禁言</a></td>';
+			html += '<td width="100"><a href="#" onclick="kick(this)">踢出</a></td>';
+			html += '<td width="100"><a href="#" onclick="ban(this)">封号</a></td>';
+			html += '<td width="100"><a href="#" onclick="banIP(this)">封IP</a></td>';
+			html += '</tr>';
+			$("table#OnlineUser tbody").html(html);
+		}
+		if(html == ""){
+			$("table#OnlineUser tbody").html("<tr><td colspan='6' style='text-align:center;'>没有在线用户</td></tr>");
+		}
+		$("#OnlineUser tbody td input").iCheck({
+			checkboxClass: 'icheckbox_square-blue',
+			radioClass: 'iradio_square-blue',
+			increaseArea: '0%'
+		});
+	});
+
+style.
+	table.table td{text-align:left;}

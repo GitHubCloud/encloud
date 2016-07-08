@@ -1,8 +1,8 @@
 include head
 audio#chatAudio
-	source(src="audio/ding.ogg", type="audio/ogg")
+	source(src="/audio/ding.ogg", type="audio/ogg")
 audio#sysmsgAudio
-	source(src="audio/sysmsg.ogg", type="audio/ogg")
+	source(src="/audio/sysmsg.ogg", type="audio/ogg")
 .panel.panel-default#online_user
 	.panel-heading
 		h3.panel-title 在线用户
@@ -28,15 +28,21 @@ script(type="text/javascript").
 
 	//- 获取用户身份
 	var uid = "#{user.id}";
+	var uip = "#{uip}";
 	if(uid != 0){
 		var from = {
+			uid: "#{user.id}",
 			uname: "#{user.user_name}",
 			ugender: "#{user.user_gender}",
-			uavatar: "#{user.user_avatar}"
+			uavatar: "#{user.user_avatar}",
+			uip: uip
 		}
 	}else{
+		var guestID = Math.round(Math.random() * 100).toString() + Math.round(Math.random() * 100).toString() + Math.round(Math.random() * 100).toString() + Math.round(Math.random() * 100).toString();
 		var from = {
-			uname: "游客" + Math.round(Math.random() * 100).toString() + Math.round(Math.random() * 100).toString() + Math.round(Math.random() * 100).toString() + Math.round(Math.random() * 100).toString()
+			uid: guestID,
+			uname: "游客" + guestID,
+			uip: uip
 		}
 	}
 

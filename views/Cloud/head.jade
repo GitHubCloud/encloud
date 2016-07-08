@@ -1,0 +1,54 @@
+doctype html
+html
+	head
+		meta(charset="UTF-8")
+		meta(name="viewport", content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0")
+		meta(http-equiv="X-UA-Compatible", content="IE=edge,chrome=1")
+		meta(name="applicable-device", content="pc,mobile")
+		if kwd
+			meta(name="keywords", content="#{kwd}")
+		if des
+			meta(name="description", content="#{des}")
+		if title
+			title #{title}
+		else
+			title Default Title
+		link(href="/css/normalize.css", rel="stylesheet")
+		link(href="/bootstrap/dist/css/bootstrap.min.css", rel="stylesheet")
+		link(href="/css/common.css", rel="stylesheet")
+		link(href="/css/theme.light.css", rel="stylesheet")
+		link(href="/css/Cloud.css", rel="stylesheet")
+		link(href="favicon.ico", mce_href="favicon.ico", rel="bookmark", type="image/x-icon")
+		link(href="favicon.ico", mce_href="favicon.ico", rel="icon", type="image/x-icon")
+		link(href="favicon.ico", mce_href="favicon.ico", rel="shortcut icon", type="image/x-icon")
+		script(src="/jquery/dist/jquery.min.js")
+		script(src="/bootstrap/dist/js/bootstrap.min.js")
+		script(src="/headroom.js/dist/headroom.min.js")
+		script(src="/headroom.js/dist/jQuery.headroom.min.js")
+		!= "<!--[if lt IE 9]>"
+			script(src="//cdn.bootcss.com/html5shiv/3.7.2/html5shiv.min.js")
+			script(src="//cdn.bootcss.com/respond.js/1.4.2/respond.min.js")
+		!= "<![endif]-->"
+		link(href="/iCheck/skins/square/blue.css", rel="stylesheet")
+		script(src="/iCheck/icheck.min.js")
+		link(href="/messenger/build/css/messenger.css", rel="stylesheet")
+		link(href="/messenger/build/css/messenger-theme-flat.css", rel="stylesheet")
+		script(src="/messenger/build/js/messenger.min.js")
+		script(src="/messenger/build/js/messenger-theme-flat.js")
+		script(src="/socket.io/socket.io.js")
+		script(src="/js/common.js")
+		if css
+			- for(var i=0; i<css.length; i++)
+				link(href="/#{css[i]}", rel="stylesheet")
+		if js
+			- for(var i=0; i<js.length; i++)
+				script(src="/#{js[i]}")
+		script.
+			var socket = io();
+			socket.on('messenger', function (type, msg) {
+				$("#messageAudio")[0].play();
+				Messenger().post({
+					type: type,
+					message: msg
+				});
+			});

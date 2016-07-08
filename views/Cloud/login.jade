@@ -1,0 +1,84 @@
+include head
+	.container-admin-login
+		h2 Encloud后台管理系统
+		form(action="#", method="POST", data-toggle="validator")
+			.form-group
+				input.form-control#uname(
+					type="text",
+					placeholder="帐号",
+					maxlength=16,
+					name="uname",
+					required,
+					data-error="用户名不能为空"
+				)
+				.help-block.with-errors
+			.form-group
+				input.form-control#upwd(
+					type="password",
+					placeholder="密码",
+					maxlength=20,
+					name="upwd",
+					required,
+					data-error="密码不能为空"
+				)
+				.help-block.with-errors
+			.form-group.clearfix
+				input.form-control#captcha(
+					type="text",
+					placeholder="验证码",
+					name="captcha",
+					required,
+					data-error="验证码不能为空",
+					data-remote="/captcha",
+					data-remote-error="验证码输入错误"
+				)
+				img#captchapng(src="/captcha.png?t=#{Date.now()}")
+				.help-block.with-errors
+			.form-group
+				button.btn.btn-primary.btn-block#loginBtn(type="submit") 登录
+			p.form-static-text Copyright &copy; Encloud
+
+script.
+	$("#captchapng").click(function (e) {
+		$(this).attr('src', '/captcha.png?t=' + Date.now());
+	});
+
+	$("form").validator().on('submit', function (e) {
+		if(e.isDefaultPrevented()){
+			//- 
+		}else{
+			$("#loginBtn").addClass('disabled');
+			$("#loginBtn").html('<i class="loadingSVG"></i>');
+			var uname = $("#uname").val();
+			var upwd = $("#upwd").val();
+			var captcha = $("#captcha").val();
+			$.ajax({
+				url: "#",
+				data: {
+					uname: uname,
+					upwd: upwd,
+					captcha: captcha
+				},
+				method: "POST",
+				success: function (d) {
+					console.log(d);
+					if(d.status != 1){
+						$("#loginBtn").removeClass('disabled');
+						$("#loginBtn").html("登&nbsp;&nbsp;录");
+						Messenger().post({
+							type: "error",
+							message: "用户名或密码错误！"
+						});
+					}else{
+						location.href = "/Cloud";
+					}
+				},
+				error: function (d) {
+					console.log(d);
+					$("#loginBtn").removeClass('disabled');
+					$("#loginBtn").html("登&nbsp;&nbsp;录");
+				}
+			});
+			return false;
+		}
+	});

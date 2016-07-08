@@ -21,9 +21,9 @@ html
 		link(href="/bootstrap/dist/css/bootstrap.min.css", rel="stylesheet")
 		link(href="/css/common.css", rel="stylesheet")
 		link(href="/css/theme.default.css", rel="stylesheet")
-		link(href="favicon.ico", mce_href="favicon.ico", rel="bookmark", type="image/x-icon")
-		link(href="favicon.ico", mce_href="favicon.ico", rel="icon", type="image/x-icon")
-		link(href="favicon.ico", mce_href="favicon.ico", rel="shortcut icon", type="image/x-icon")
+		link(href="/favicon.ico", mce_href="favicon.ico", rel="bookmark", type="image/x-icon")
+		link(href="/favicon.ico", mce_href="favicon.ico", rel="icon", type="image/x-icon")
+		link(href="/favicon.ico", mce_href="favicon.ico", rel="shortcut icon", type="image/x-icon")
 		script(src="/jquery/dist/jquery.min.js")
 		script(src="/bootstrap/dist/js/bootstrap.min.js")
 		script(src="/headroom.js/dist/headroom.min.js")
@@ -38,8 +38,8 @@ html
 		link(href="/messenger/build/css/messenger-theme-flat.css", rel="stylesheet")
 		script(src="/messenger/build/js/messenger.min.js")
 		script(src="/messenger/build/js/messenger-theme-flat.js")
-		script(src="http://static.geetest.com/static/tools/gt.js")
 		script(src="/socket.io/socket.io.js")
+		script(src="/js/common.js")
 		if css
 			- for(var i=0; i<css.length; i++)
 				link(href="#{css[i]}", rel="stylesheet")
@@ -47,23 +47,6 @@ html
 			- for(var i=0; i<js.length; i++)
 				script(src="#{js[i]}")
 		script(type="text/javascript").
-			var browser=navigator.appName;
-			var b_version=navigator.appVersion;
-			var version=b_version.split(";");
-			var trim_Version=version[1].replace(/[ ]/g,"");
-			if(browser=="Microsoft Internet Explorer" && trim_Version=="MSIE6.0"){
-				navigatorWrong(6);
-			}else if(browser=="Microsoft Internet Explorer" && trim_Version=="MSIE7.0"){
-				navigatorWrong(7);
-			}else if(browser=="Microsoft Internet Explorer" && trim_Version=="MSIE8.0"){
-				navigatorWrong(8);
-			}else if(browser=="Microsoft Internet Explorer" && trim_Version=="MSIE9.0"){
-				navigatorWrong(9);
-			}
-			function navigatorWrong(v) {
-				alert('检测到您正在使用IE' + v + '浏览器，部分功能将不被支持，建议您更换Chrome或更高版本浏览器以支持全部功能。');
-			}
-
 			$(function(){
 				$("#headroom").headroom({
 					"offset": 50,
@@ -74,24 +57,7 @@ html
 						"unpinned": "slideUp"
 					}
 				});
-
-				$("input").iCheck({
-					checkboxClass: 'icheckbox_square-blue',
-					radioClass: 'iradio_square-blue',
-					increaseArea: '0%'
-				});
 			});
-
-			Messenger.options = {
-				extraClasses: 'messenger-fixed messenger-on-bottom',
-				theme: 'flat',
-				messageDefaults: {
-					message: '默认信息',
-					type: 'info',
-					showCloseButton: true,
-					hideAfter: 5
-				}
-			}
 
 			var socket = io();
 			socket.on('messenger', function (type, msg) {
@@ -103,7 +69,7 @@ html
 			});
 	body
 		audio#messageAudio
-			source(src="audio/message.ogg", type="audio/ogg")
+			source(src="/audio/message.ogg", type="audio/ogg")
 		nav.navbar.navbar-inverse.navbar-fixed-top#headroom
 			div.container
 				div.navbar-header

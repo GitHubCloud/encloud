@@ -1,0 +1,76 @@
+include head
+body
+	include menu
+	.container-admin.admin-open
+		include adminHead
+		.adminBody.clearfix
+			.container.text-center(style="min-width:320px;max-width:450px;width:66%;")
+				h3 Messenger Sender
+				.form-group
+					input.form-control#MessengerMessage(type="text", placeholder="Message")
+				.form-group
+					select.form-control#MessengerType
+						option(value="info") Info
+						option(value="success") Success
+						option(value="error") Error
+				.form-group
+					button.btn.btn-primary.btn-block#MessengerBtn Send Messenger
+			.focuser
+			table.table
+				caption History Messenger
+				thead
+					tr
+						th(width="60") ID
+						th Message
+						th(width="90") Type
+						th(width="100") Date
+						th(width="130") Sender
+				tbody
+					tr
+						td 1
+						td Hello World!
+						td info
+						td 2016-7-3
+						td Cloud
+			nav.text-center
+				.pagination(data-toggle="tooltip", title="You can press arrow key to go to next(prev) page.")
+					li: a(href="#"): i.glyphicon.glyphicon-step-backward
+					li: a(href="#"): i.glyphicon.glyphicon-triangle-left
+					li.active: a(href="#") 1
+					li: a(href="#") 2
+					li: a(href="#") 3
+					li: a(href="#") 4
+					li: a(href="#") 5
+					li: a(href="#"): i.glyphicon.glyphicon-triangle-right
+					li: a(href="#"): i.glyphicon.glyphicon-step-forward
+script.
+	$("#MessengerBtn").click(function (e) {
+		if($("#MessengerType").val() && $("#MessengerMessage").val()){
+			socket.emit('messenger', $("#MessengerType").val(), $("#MessengerMessage").val(), "#{admin.uname}");
+			Messenger().post({
+				type: 'success',
+				message: 'Messenger send success!'
+			});
+		}else{
+			Messenger().post({
+				type: 'error',
+				message: 'Can not send empty Messenger!'
+			});
+		}
+	});
+	$("[data-toggle=tooltip]").tooltip();
+
+	var page = parseInt("#{page}");
+	$(document).keydown(function (e) {
+		if(e.keyCode == 37){
+			getMessenger(page-1);
+		}else if(e.keyCode == 39){
+			getMessenger(page+1);
+		}
+	});
+/*****************************************************/
+	function getMessenger(p) {
+		var param = {};
+		param.page = p<1?1:p;
+		if(param.page == page){ return false; }
+	}

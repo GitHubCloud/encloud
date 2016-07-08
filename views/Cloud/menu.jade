@@ -1,0 +1,18 @@
+ul.sideMenu.sideMenu-open
+	if config
+		each v in config.Menu
+			- var active = v.url==position?"active":"";
+			li(class="#{active}")
+				- var toggle = v.children?"openMenu":"";
+				a(href="#{v.url}", data-toggle="#{toggle}")
+					if v.icon
+						i(class="glyphicon glyphicon-#{v.icon}")
+					| #{v.title}
+					if v.children
+						i.glyphicon.glyphicon-option-horizontal
+				if v.children
+					ul.collapsedMenu
+						each c in v.children
+							- var active = c.url==position?"active":"";
+							li(class="#{active}")
+								a(href="#{c.url}") #{c.title}

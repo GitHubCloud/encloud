@@ -15,6 +15,14 @@ body>.container{
   background:url(../svg/throbber_small.svg);
 }
 
+.loadingSVG-dark{
+  display:inline-block;
+  width:36px;
+  height:36px;
+  vertical-align:middle;
+  background:url(../svg/throbber_small_dark.svg);
+}
+
 /*导航自动隐藏*/
 
 .animated {

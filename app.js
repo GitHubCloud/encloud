@@ -39,12 +39,19 @@ console.log('Server running at port %s', port);
 
 // json配置文件
 var config = require('./config.json');
+var adminConfig = require('./adminConfig.json');
 
 // 监听服务器事件
 io.on('connection', function (socket) {
 	// 用Messenger推送全站广播
-	socket.on('messenger', function (type, msg) {
+	socket.on('messenger', function (type, msg, from) {
+		MessengerWriteIn(msg, type, from);
 		socket.broadcast.emit('messenger', type, msg);
+	});
+
+	// 获取在线用户列表
+	socket.on('getOnlineUser', function () {
+		socket.emit('getOnlineUser', users);
 	});
 });
 
@@ -68,9 +75,11 @@ chat.on('connection', function (socket) {
 		socket.broadcast.emit('sysmsg', '欢迎 <i>' + from.uname + '</i> 进入聊天室');
 		socket.emit('sysmsg', '欢迎 <i>' + from.uname + '</i> 进入聊天室');
 		users[from.uname] = {
+			uid: from.uid,
 			uname: from.uname,
 			ugender: from.ugender,
-			uavatar: from.uavatar
+			uavatar: from.uavatar,
+			uip: from.uip
 		}
 		socket.broadcast.emit('updateusers', users);
 	});
@@ -100,21 +109,184 @@ function writeInHistory(msg, from) {
 	});
 }
 
-// Admin
-app.get('/Cloud', function (req, res) {
-	if(req.session.uid && req.session.Admin){
+// 把Messenger消息写进历史记录
+function MessengerWriteIn(msg, type, from) {
+	var Messenger_model = require('./model/Messenger');
+	var Messenger_entity = Messenger_model({
+		Message: msg,
+		Type: type,
+		Date: Date.now(),
+		Sender: from
+	});
+	Messenger_entity.save(function (err) {
+		if(err){ console.error(err.stack); }
+	});
+}
+
+// Admin Login
+app.get('/Cloud/login', function (req, res) {
+	res.render('Cloud/login', {
+		title: 'Cloud',
+		js: ['bootstrap-validator/dist/validator.min.js']
+	});
+});
+app.post('/Cloud/login', function (req, res) {
+	var uname = req.body.uname;
+	var upwd = req.body.upwd;
+	var captcha = req.body.captcha;
+	if(uname && upwd && captcha){
 		var user = require('./model/user');
-		user.find({_id: req.session.uid, Admin: req.session.Admin}, function (err) {
+		upwd = md5encrypt(upwd);
+		user.find({user_name: uname, user_pwd: upwd, Admin: 'true'}, function (err, d) {
 			if(err){ console.error(err.stack); }
-			res.render('Cloud', {
-				title: 'Cloud',
-				config: config
-			});
+			if(d){
+				req.session.uid = d[0]._id;
+				req.session.uname = d[0].user_name;
+				req.session.Admin = d[0].Admin;
+				res.send({status:1});
+			}else{
+				res.send({status:0});
+			}
 		});
 	}else{
-		res.redirect('/login');
+		res.send({status:0});
 	}
 });
+
+// Admin
+app.get('/Cloud', function (req, res) {
+	if(req.session.uid && req.session.uname && req.session.Admin){
+		var user = require('./model/user');
+		user.find({_id: req.session.uid, Admin: req.session.Admin}, function (err, d) {
+			if(err){ console.error(err.stack); }
+			if(d){
+				req.session.uavatar = d[0].user_avatar;
+				var admin = {
+					uid: req.session.uid,
+					uname: req.session.uname,
+					uavatar: req.session.uavatar
+				}
+				res.render('Cloud/Cloud', {
+					title: 'Cloud',
+					config: adminConfig,
+					js: ['js/Cloud.js'],
+					admin: admin,
+					position: req.url
+				});
+			}else{
+				res.redirect('/Cloud/login');
+			}
+		});
+	}else{
+		res.redirect('/Cloud/login');
+	}
+});
+
+// Admin Messenger
+app.get('/Cloud/Messenger', function (req, res) {
+	// checkAdmin(req)
+	if(true){
+		var admin = {
+			uid: req.session.uid,
+			uname: req.session.uname,
+			uavatar: req.session.uavatar
+		}
+		var page = req.query.p?req.query.p:1;
+		res.render('Cloud/Messenger', {
+			title: 'Messenger',
+			config: adminConfig,
+			js: ['js/Cloud.js'],
+			admin: admin,
+			position: req.url,
+			page: page
+		});
+	}else{
+		res.redirect('/Cloud/login');
+	}
+});
+app.post('/Cloud/Messenger', function (req, res) {
+	var Messenger = require('./model/Messenger');
+	Messenger.find({}, function (err, d) {
+		if(err){ console.error(err.stack); }
+		if(d){
+			res.send({
+				status:1,
+				data: d
+			});
+		}else{
+			res.send({status:0});
+		}
+	});
+});
+
+
+// Admin AllUser
+app.get('/Cloud/User/AllUser', function (req, res) {
+	if(checkAdmin(req)){
+		var admin = {
+			uid: req.session.uid,
+			uname: req.session.uname,
+			uavatar: req.session.uavatar
+		}
+		res.render('Cloud/AllUser', {
+			title: 'AllUser',
+			config: adminConfig,
+			js: ['js/Cloud.js'],
+			admin: admin,
+			position: req.url
+		});
+	}else{
+		res.redirect('/Cloud/login');
+	}
+});
+
+// Admin OnlineUser
+app.get('/Cloud/User/OnlineUser', function (req, res) {
+	if(checkAdmin(req)){
+		var admin = {
+			uid: req.session.uid,
+			uname: req.session.uname,
+			uavatar: req.session.uavatar
+		}
+		res.render('Cloud/OnlineUser', {
+			title: 'OnlineUser',
+			config: adminConfig,
+			js: ['js/Cloud.js'],
+			admin: admin,
+			position: req.url
+		});
+	}else{
+		res.redirect('/Cloud/login');
+	}
+});
+
+// Admin ChatHistory
+app.get('/Cloud/ChatHistory', function (req, res) {
+	if(checkAdmin(req)){
+		var admin = {
+			uid: req.session.uid,
+			uname: req.session.uname,
+			uavatar: req.session.uavatar
+		}
+		res.render('Cloud/ChatHistory', {
+			title: 'ChatHistory',
+			config: adminConfig,
+			js: ['js/Cloud.js'],
+			admin: admin,
+			position: req.url
+		});
+	}else{
+		res.redirect('/Cloud/login');
+	}
+});
+
+function checkAdmin(req) {
+	if(req.session.uid && req.session.uname && req.session.uavatar){
+		return true;
+	}else{
+		return false;
+	}
+}
 
 // 首页
 app.get('/', function (req, res) {
@@ -142,10 +314,19 @@ app.get('/chatroom', function (req, res) {
 			position: 'chatroom',
 			js: ['js/chatroom.js','malihu-custom-scrollbar-plugin/jquery.mCustomScrollbar.concat.min.js'],
 			css: ['css/chatroom.css','malihu-custom-scrollbar-plugin/jquery.mCustomScrollbar.min.css'],
-			user: usr?usr:{id:0}
+			user: usr?usr:{id:0},
+			uip: getClientIp(req)
 		});
 	});
 });
+
+// 获取客户端IP
+function getClientIp(req) {
+	return req.headers['x-forwarded-for'] ||
+	req.connection.remoteAddress ||
+	req.socket.remoteAddress ||
+	req.connection.socket.remoteAddress;
+};
 
 // 上传头像
 app.post('/uploadAvatar', function (req, res) {
@@ -373,7 +554,6 @@ app.post('/login', function (req, res) {
 		user.findOne({'user_name': user_name, 'user_pwd': user_pwd}, function (err, d) {
 			if(err) console.error(err.stack);
 			if(d){
-				if(d.Admin){ req.session.Admin = d.Admin; }
 				if(remember == 'true'){
 					res.cookie('uid', d._id, {
 						maxAge: 60000 * 60 * 24 * 7,

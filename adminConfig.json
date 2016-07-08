@@ -1,0 +1,67 @@
+{
+	"Menu": {
+		"0": {
+			"title": "Cloud",
+			"icon": "cloud",
+			"url": "/Cloud"
+		},
+		"1": {
+			"title": "Messenger",
+			"icon": "bullhorn",
+			"url": "/Cloud/Messenger"
+		},
+		"2": {
+			"title": "User",
+			"icon": "user",
+			"url": "#",
+			"children": {
+				"0": {
+					"title": "All User",
+					"url": "/Cloud/User/AllUser"
+				},
+				"1": {
+					"title": "Online User",
+					"url": "/Cloud/User/OnlineUser"
+				}
+			}
+		},
+		"3": {
+			"title": "Chat History",
+			"icon": "comment",
+			"url": "/Cloud/ChatHistory"
+		}
+	},
+	"Dropdown": {
+		"0": {
+			"title": "点我注销",
+			"url": "#"
+		},
+		"1": {
+			"title": "点我也可以注销",
+			"url": "#"
+		},
+		"2": {
+			"title": "除了注销想不到别的功能",
+			"url": "#"
+		},
+		"3": {
+			"title": "其实也不是想不到",
+			"url": "#"
+		},
+		"4": {
+			"title": "只是嫌麻烦",
+			"url": "#"
+		},
+		"5": {
+			"title": "在这多打几个字",
+			"url": "#"
+		},
+		"6": {
+			"title": "也可以让功能看起来很饱满",
+			"url": "#"
+		}
+	},
+	"Pagination": {
+		"size": 10
+	}
+}
