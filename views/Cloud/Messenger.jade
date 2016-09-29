@@ -18,13 +18,20 @@ body
 			.focuser
 			table.table
 				caption History Messenger
+				//- thead
+				//- 	tr
+				//- 		th(width="60") ID
+				//- 		th Message
+				//- 		th(width="90") Type
+				//- 		th(width="100") Date
+				//- 		th(width="130") Sender
 				thead
 					tr
-						th(width="60") ID
+						th ID
 						th Message
-						th(width="90") Type
-						th(width="100") Date
-						th(width="130") Sender
+						th Type
+						th Date
+						th Sender
 				tbody
 					tr
 						td 1
@@ -33,7 +40,7 @@ body
 						td 2016-7-3
 						td Cloud
 			nav.text-center
-				.pagination(data-toggle="tooltip", title="You can press arrow key to go to next(prev) page.")
+				.pagination
 					li: a(href="#"): i.glyphicon.glyphicon-step-backward
 					li: a(href="#"): i.glyphicon.glyphicon-triangle-left
 					li.active: a(href="#") 1
@@ -68,9 +75,31 @@ script.
 			getMessenger(page+1);
 		}
 	});
-/*****************************************************/
 	function getMessenger(p) {
 		var param = {};
 		param.page = p<1?1:p;
 		if(param.page == page){ return false; }
+		$.ajax({
+			type: 'post',
+			url: '#',
+			data: { page:p },
+			success: function (d) {
+				console.log(d);
+				var len = d.data.length;
+				var html = '';
+				for(var i = 0; i < len; i++){
+					html += '<tr>';
+					html += '<td>'+d.data[i]._id+'</td>';
+					html += '<td>'+d.data[i].Message+'</td>';
+					html += '<td>'+d.data[i].Type+'</td>';
+					html += '<td>'+d.data[i].Date+'</td>';
+					html += '<td>'+d.data[i].Sender+'</td>';
+					html += '</tr>';
+				}
+				$('tbody').html(html);
+			},
+			error: function (d) {
+				console.log(d);
+			}
+		});
 	}
