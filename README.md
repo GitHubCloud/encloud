@@ -1,10 +1,10 @@
 ##Encloud
 
-My first Nodejs site.
+My first Nodejs site, wrote in 2016.
 
 Nothing special.
 
-See it online: [http://encloud.com.cn/](http://encloud.com.cn/)
+See it online: [http://chat.encloud.info/](http://chat.encloud.info/)
 
 ###Update
 
@@ -42,7 +42,7 @@ See it online: [http://encloud.com.cn/](http://encloud.com.cn/)
 - iCheck
 - malihu-custom-scrollbar-plugin
 
-###Todo
+###(NEVER) Todo
 
 - [x]区分用户角色
 - [ ]房间划分

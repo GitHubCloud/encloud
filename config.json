@@ -1,37 +1,62 @@
 {
-	"nav": {
-		"index": {
-			"title": "首页",
-			"url": "/",
-			"position": "index"
-		},
-		"chatroom": {
-			"title": "聊天室",
-			"url": "/chatroom",
-			"position": "chatroom"
-		},
-		"user": {
-			"title": "用户",
-			"url": "/user",
-			"position": "user"
-		},
-		"register": {
-			"title": "注册",
-			"url": "/register",
-			"position": "register"
-		},
-		"login": {
-			"title": "登录",
-			"url": "/login",
-			"position": "login"
-		}
-	},
-	"seo": {
-		"title": "Cloud",
-		"kwd": "nodejs,聊天室,chat,Cloud,encloud",
-		"des": "encloud.com.cn是一个基于nodejs的网站，主要功能是一个聊天室"
-	},
-	"page": {
-		"count": 10
-	}
+    "nav": {
+        "index": {
+            "title": "首页",
+            "url": "/",
+            "position": "index"
+        },
+        "chatroom": {
+            "title": "聊天室",
+            "url": "/chatroom",
+            "position": "chatroom"
+        },
+        "user": {
+            "title": "用户",
+            "url": "/user",
+            "position": "user"
+        },
+        "list": {
+            "title": "列表",
+            "url": "/list",
+            "position": "list"
+        },
+        "register": {
+            "title": "注册",
+            "url": "/register",
+            "position": "register"
+        },
+        "login": {
+            "title": "登录",
+            "url": "/login",
+            "position": "login"
+        },
+        "jade": {
+            "title": "jade",
+            "url": "/jade",
+            "position": "jade"
+        },
+        "parent": {
+            "title": "parent",
+            "url": "javascript:void(0);",
+            "children": {
+                "example": {
+                    "title": "example",
+                    "url": "/example"
+                },
+                "divider": true,
+                "child2": {
+                    "title": "child2",
+                    "url": "javascript:void();"
+                }
+            }
+        }
+    },
+    "seo": {
+        "title": "Cloud",
+        "kwd": "nodejs,聊天室,chat,Cloud,encloud",
+        "des": "encloud.com.cn是一个基于nodejs的网站，主要功能是一个聊天室"
+    },
+    "page": {
+        "count": 10
+    }
 }
